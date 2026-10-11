@@ -16,15 +16,15 @@ class VGGNet(nn.Module):
     def __init__(self, num_classes=10, dropout=0.5):
         super().__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(3, 64, 3, padding=1), nn.ReLU(inplace=True),
-            nn.Conv2d(64, 64, 3, padding=1), nn.ReLU(inplace=True),
+            nn.Conv2d(3, 64, 3, padding=1), nn.BatchNorm2d(64), nn.ReLU(inplace=True),
+            nn.Conv2d(64, 64, 3, padding=1), nn.BatchNorm2d(64), nn.ReLU(inplace=True),
             nn.MaxPool2d(2, 2),                                        # 96 → 48
 
-            nn.Conv2d(64, 128, 3, padding=1), nn.ReLU(inplace=True),
-            nn.Conv2d(128, 128, 3, padding=1), nn.ReLU(inplace=True),
+            nn.Conv2d(64, 128, 3, padding=1), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
+            nn.Conv2d(128, 128, 3, padding=1), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
             nn.MaxPool2d(2, 2),                                        # 48 → 24
 
-            nn.Conv2d(128, 256, 3, padding=1), nn.ReLU(inplace=True),
+            nn.Conv2d(128, 256, 3, padding=1), nn.BatchNorm2d(256), nn.ReLU(inplace=True),
             nn.MaxPool2d(2, 2),                                        # 24 → 12
         )
         self.classifier = nn.Sequential(
@@ -100,7 +100,7 @@ def main():
     parser.add_argument('--save-dir',   default='checkpoints')
     parser.add_argument('--epochs',     type=int,   default=100)
     parser.add_argument('--batch-size', type=int,   default=64)
-    parser.add_argument('--lr',         type=float, default=0.05)
+    parser.add_argument('--lr',         type=float, default=0.01)
     parser.add_argument('--dropout',    type=float, default=0.5)
     parser.add_argument('--seed',       type=int,   default=42)
     args = parser.parse_args()

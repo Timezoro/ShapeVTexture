@@ -172,13 +172,13 @@ def write_summary(df, bias_df, out_path):
     top_shape = bias_df.nlargest(5, 'shape_bias')[
         ['shape_class', 'texture_class', 'shape_bias']]
     for _, r in top_shape.iterrows():
-        lines.append(f'  {r.shape_class:10s} + {r.texture_class:10s} texture → {r.shape_bias:.3f}')
+        lines.append(f'  {r.shape_class:10s} + {r.texture_class:10s} texture -> {r.shape_bias:.3f}')
 
     lines += ['', 'Top 5 most texture-biased pairs:']
     top_tex = bias_df.nsmallest(5, 'shape_bias')[
         ['shape_class', 'texture_class', 'shape_bias']]
     for _, r in top_tex.iterrows():
-        lines.append(f'  {r.shape_class:10s} + {r.texture_class:10s} texture → {r.shape_bias:.3f}')
+        lines.append(f'  {r.shape_class:10s} + {r.texture_class:10s} texture -> {r.shape_bias:.3f}')
 
     text = '\n'.join(lines)
     print('\n' + text)

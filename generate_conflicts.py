@@ -39,11 +39,11 @@ class VGG19Features(nn.Module):
     """Return activations at named layers. Input must be ImageNet-normalised."""
 
     LAYER_MAP = {
-        'relu1_1': 2,  'relu1_2': 4,
-        'relu2_1': 7,  'relu2_2': 9,
-        'relu3_1': 12, 'relu3_2': 14, 'relu3_3': 16, 'relu3_4': 18,
-        'relu4_1': 21, 'relu4_2': 23, 'relu4_3': 25, 'relu4_4': 27,
-        'relu5_1': 30, 'relu5_2': 32, 'relu5_3': 34, 'relu5_4': 36,
+        'relu1_1': 1,  'relu1_2': 3,
+        'relu2_1': 6,  'relu2_2': 8,
+        'relu3_1': 11, 'relu3_2': 13, 'relu3_3': 15, 'relu3_4': 17,
+        'relu4_1': 20, 'relu4_2': 22, 'relu4_3': 24, 'relu4_4': 26,
+        'relu5_1': 29, 'relu5_2': 31, 'relu5_3': 33, 'relu5_4': 35,
     }
 
     def __init__(self, layers):
@@ -51,7 +51,8 @@ class VGG19Features(nn.Module):
         vgg = models.vgg19(weights=models.VGG19_Weights.IMAGENET1K_V1).features
         self.slices = nn.ModuleDict()
         prev = 0
-        for name in layers:
+        # must process in ascending index order so slices chain correctly
+        for name in sorted(layers, key=lambda n: self.LAYER_MAP[n]):
             idx = self.LAYER_MAP[name]
             self.slices[name] = nn.Sequential(*list(vgg.children())[prev:idx + 1])
             prev = idx + 1
@@ -209,7 +210,7 @@ def main():
                 result.save(out_path)
 
             done += 1
-            print(f'[{done}/{total_pairs}] {shape_name} → {tex_name}')
+            print(f'[{done}/{total_pairs}] {shape_name} -> {tex_name}')
 
     print(f'\nDone. Conflict images saved to {args.out_dir}/')
 
